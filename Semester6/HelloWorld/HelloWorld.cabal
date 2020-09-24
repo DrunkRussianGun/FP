@@ -4,13 +4,15 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0659be466646877d64b08cf160fd2333a33fd7097c4f11cf94231ada25c1fb7a
+-- hash: 864d49bbb703d278e9e3b5b60286679f61a80dc7d4116e86ac07283de40d6c99
 
 name:           HelloWorld
 version:        0.1.0.0
 build-type:     Simple
 
 library
+  exposed-modules:
+      Types
   other-modules:
       Paths_HelloWorld
   hs-source-dirs:

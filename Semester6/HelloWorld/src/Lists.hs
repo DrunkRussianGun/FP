@@ -1,10 +1,4 @@
-module Lists
-( append
-, withoutLast
-, group
-, intersperse
-, transpose
-) where
+module Lists (module Lists) where
 
 -- data [a] = [] | a : [a]
 
@@ -61,3 +55,28 @@ transpose rows = case rows of
 			(firstColumn : restOfColumns) ->
 				let (firstFromRow : restOfRow) = row
 				in (firstFromRow : firstColumn) : putRowOnTop restOfRow restOfColumns
+
+-- map [1, 2, 3, 4] $ (+) 1 == [2, 3, 4, 5]
+map :: [a] -> (a -> b) -> [b]
+map list mapFunction = case list of
+	[] -> []
+	(first : rest) -> mapFunction first : Lists.map rest mapFunction
+
+filter :: [a] -> (a -> Bool) -> [a]
+filter list predicate = case list of
+	[] -> []
+	(first : rest) ->
+		let filteredList = Lists.filter rest predicate
+		in case predicate first of
+			False -> filteredList
+			True  -> first : filteredList
+
+foldl :: [a] -> b -> (b -> a -> b) -> b
+foldl list accumulator foldFunction = case list of
+	[] -> accumulator
+	(first : rest) -> Lists.foldl rest (accumulator `foldFunction` first) foldFunction
+
+foldr :: [a] -> b -> (a -> b -> b) -> b
+foldr list accumulator foldFunction = case list of
+	[] -> accumulator
+	(first : rest) -> first `foldFunction` Lists.foldr rest accumulator foldFunction

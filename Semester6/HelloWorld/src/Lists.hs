@@ -21,7 +21,7 @@ append leftList rightList = case leftList of
 -- withoutLast [1, 2, 3] == [1, 2]
 withoutLast :: [a] -> [a]
 withoutLast list = case list of
-	[] -> undefined
+	[] -> error "Невозможно убрать последний элемент из пустого списка"
 	[element] -> []
 	(first : rest) -> first : withoutLast rest
 
@@ -35,8 +35,8 @@ group list = case list of
 	(first : second : rest) -> case first == second of
 		False -> [first] : group (second : rest)
 		True  ->
-			let groupingOfSecond : restGroupings = group (second : rest)
-			in (first : groupingOfSecond) : restGroupings
+			let groupingOfSecond : restOfGroupings = group (second : rest)
+			in (first : groupingOfSecond) : restOfGroupings
 
 -- Вставка элемента между остальными элементами в списке 
 -- Стандартная функция Data.List.intersperse
@@ -53,14 +53,11 @@ intersperse elementToInsert list = case list of
 transpose :: [[a]] -> [[a]]
 transpose rows = case rows of
 	[] -> []
-	(firstRow : restRows) -> putRowOnTop firstRow $ transpose restRows
-
--- Помещает i-й элемент данной строки в начало i-го столбца
-putRowOnTop :: [a] -> [[a]] -> [[a]]
-putRowOnTop row columns = case columns of
-	[] -> case row of
-		[] -> []
-		(firstFromRow : restRow) -> [firstFromRow] : putRowOnTop restRow []
-	(firstColumn : restColumns) ->
-		let (firstFromRow : restRow) = row
-		in (firstFromRow : firstColumn) : putRowOnTop restRow restColumns
+	(firstRow : restOfRows) -> putRowOnTop firstRow $ transpose restOfRows where
+		putRowOnTop row columns = case columns of
+			[] -> case row of
+				[] -> []
+				(firstFromRow : restOfRow) -> [firstFromRow] : putRowOnTop restOfRow []
+			(firstColumn : restOfColumns) ->
+				let (firstFromRow : restOfRow) = row
+				in (firstFromRow : firstColumn) : putRowOnTop restOfRow restOfColumns

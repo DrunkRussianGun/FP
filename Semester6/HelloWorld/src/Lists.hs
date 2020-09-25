@@ -1,10 +1,4 @@
-module Lists
-( append
-, withoutLast
-, group
-, intersperse
-, transpose
-) where
+module Lists (module Lists) where
 
 -- data [a] = [] | a : [a]
 
@@ -21,7 +15,7 @@ append leftList rightList = case leftList of
 -- withoutLast [1, 2, 3] == [1, 2]
 withoutLast :: [a] -> [a]
 withoutLast list = case list of
-	[] -> undefined
+	[] -> error "Невозможно убрать последний элемент из пустого списка"
 	[element] -> []
 	(first : rest) -> first : withoutLast rest
 
@@ -35,8 +29,8 @@ group list = case list of
 	(first : second : rest) -> case first == second of
 		False -> [first] : group (second : rest)
 		True  ->
-			let groupingOfSecond : restGroupings = group (second : rest)
-			in (first : groupingOfSecond) : restGroupings
+			let groupingOfSecond : restOfGroupings = group (second : rest)
+			in (first : groupingOfSecond) : restOfGroupings
 
 -- Вставка элемента между остальными элементами в списке 
 -- Стандартная функция Data.List.intersperse
@@ -53,14 +47,36 @@ intersperse elementToInsert list = case list of
 transpose :: [[a]] -> [[a]]
 transpose rows = case rows of
 	[] -> []
-	(firstRow : restRows) -> putRowOnTop firstRow $ transpose restRows
+	(firstRow : restOfRows) -> putRowOnTop firstRow $ transpose restOfRows where
+		putRowOnTop row columns = case columns of
+			[] -> case row of
+				[] -> []
+				(firstFromRow : restOfRow) -> [firstFromRow] : putRowOnTop restOfRow []
+			(firstColumn : restOfColumns) ->
+				let (firstFromRow : restOfRow) = row
+				in (firstFromRow : firstColumn) : putRowOnTop restOfRow restOfColumns
 
--- Помещает i-й элемент данной строки в начало i-го столбца
-putRowOnTop :: [a] -> [[a]] -> [[a]]
-putRowOnTop row columns = case columns of
-	[] -> case row of
-		[] -> []
-		(firstFromRow : restRow) -> [firstFromRow] : putRowOnTop restRow []
-	(firstColumn : restColumns) ->
-		let (firstFromRow : restRow) = row
-		in (firstFromRow : firstColumn) : putRowOnTop restRow restColumns
+-- map [1, 2, 3, 4] $ (+) 1 == [2, 3, 4, 5]
+map :: [a] -> (a -> b) -> [b]
+map list mapFunction = case list of
+	[] -> []
+	(first : rest) -> mapFunction first : Lists.map rest mapFunction
+
+filter :: [a] -> (a -> Bool) -> [a]
+filter list predicate = case list of
+	[] -> []
+	(first : rest) ->
+		let filteredList = Lists.filter rest predicate
+		in case predicate first of
+			False -> filteredList
+			True  -> first : filteredList
+
+foldl :: [a] -> b -> (b -> a -> b) -> b
+foldl list accumulator foldFunction = case list of
+	[] -> accumulator
+	(first : rest) -> Lists.foldl rest (accumulator `foldFunction` first) foldFunction
+
+foldr :: [a] -> b -> (a -> b -> b) -> b
+foldr list accumulator foldFunction = case list of
+	[] -> accumulator
+	(first : rest) -> first `foldFunction` Lists.foldr rest accumulator foldFunction

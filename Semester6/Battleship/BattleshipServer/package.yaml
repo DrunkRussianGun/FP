@@ -3,7 +3,6 @@ version:             0.1.0.0
 license:             BSD3
 
 extra-source-files:
-- README.md
 - ChangeLog.md
 
 dependencies:

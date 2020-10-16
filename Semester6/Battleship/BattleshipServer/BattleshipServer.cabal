@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 9b1803eaf101fb2a225b4dbc1a0c54b861d3baf7b16bf45342bb7e8e4e0ebc2a
+-- hash: 7010b7a99cfd6a05b45a801b04f608b51eeb0369ef3140e781d7c73422465b2b
 
 name:           BattleshipServer
 version:        0.1.0.0
@@ -12,7 +12,6 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    README.md
     ChangeLog.md
 
 library
